@@ -7,25 +7,25 @@ namespace EspacioAccesoData
 {
     public abstract class AccesoDato
     {
-        public abstract List<Cadete> GetCadetes();
-        public abstract Cadeteria getCadeteria();
+        public abstract List<Cadete> GetCadetes(string path);
+        public abstract Cadeteria getCadeteria(string path);
     }
 
 
 
     public class AccesoJson:AccesoDato
     {
-        public override Cadeteria getCadeteria()
+        public override Cadeteria getCadeteria(string path)
         {
 
-                string textoJson = File.ReadAllText("Cadeteria.Json");
+                string textoJson = File.ReadAllText(path);
                 Cadeteria cadeteria = JsonSerializer.Deserialize<Cadeteria>(textoJson);
                 return cadeteria;
         }
 
-        public override List<Cadete> GetCadetes()
+        public override List<Cadete> GetCadetes(string path)
         {
-             string textoJson = File.ReadAllText("Cadetes.Json");
+             string textoJson = File.ReadAllText(path);
             List<Cadete> nuevaLista = JsonSerializer.Deserialize<List<Cadete>>(textoJson);
             return nuevaLista;
         }
@@ -35,10 +35,10 @@ namespace EspacioAccesoData
 
     public class AccesoCSV:AccesoDato
     {
-        public override Cadeteria getCadeteria()
+        public override Cadeteria getCadeteria(string path)
         {
             Cadeteria cadeteria=new Cadeteria("","");
-            var csv = new FileStream("Cadeteria.CSV", FileMode.Open);//abrir el archivo
+            var csv = new FileStream(path, FileMode.Open);//abrir el archivo
             var sr = new StreamReader(csv);// para leer
             while (!sr.EndOfStream)
             {
@@ -52,10 +52,10 @@ namespace EspacioAccesoData
             return (cadeteria);
         }
 
-        public override List<Cadete> GetCadetes()
+        public override List<Cadete> GetCadetes(string path)
         {
             List<Cadete> cadetes = new List<Cadete>();
-            var csv = new FileStream("Cadetes.CSV", FileMode.Open);//abrir el archivo
+            var csv = new FileStream(path, FileMode.Open);//abrir el archivo
             var sr = new StreamReader(csv);// para leer
             while (!sr.EndOfStream)
             {

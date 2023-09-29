@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using EspacioEntidades;
 using System.Linq;
+using cadeteriaAPI;
+using EspacioAccesoData;
 
 namespace EspacioEntidades
 {
@@ -10,8 +12,17 @@ namespace EspacioEntidades
         private string telefono;
         private List<Cadete> listadoCadetes;
         private List<Pedido> listadoPedidos;
+        private static Cadeteria cadeteriaSingleton;
 
-
+        public static Cadeteria GetCadeteriaSingleton()
+        {
+            if (cadeteriaSingleton == null)
+            {
+                AccesoDato helper = new AccesoJson();
+                Cadeteria cadeteria = helper.getCadeteria("./manejoDatos/cadeteria.json");
+            }
+            return cadeteriaSingleton;
+        }
         public Cadeteria(string nombre, string telefono)
         {
             this.Nombre = nombre;
