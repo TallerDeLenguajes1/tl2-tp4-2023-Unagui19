@@ -12,16 +12,17 @@ namespace EspacioEntidades
         private string telefono;
         private List<Cadete> listadoCadetes;
         private List<Pedido> listadoPedidos;
-        private static Cadeteria cadeteriaSingleton;
+        private static Cadeteria inicializado;
 
         public static Cadeteria GetCadeteriaSingleton()
         {
-            if (cadeteriaSingleton == null)
+            if (inicializado == null)
             {
-                AccesoDato helper = new AccesoJson();
-                Cadeteria cadeteria = helper.getCadeteria("./manejoDatos/cadeteria.json");
+                AccesoData helper = new AccesoJson();
+                Cadeteria cadeteria = helper.getCadeteria("cadeteria.json");
+                List<Cadete> cadetes = helper.getCadetes("Cadetes.json");
             }
-            return cadeteriaSingleton;
+            return inicializado;
         }
         public Cadeteria(string nombre, string telefono)
         {

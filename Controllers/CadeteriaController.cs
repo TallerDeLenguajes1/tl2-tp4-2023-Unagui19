@@ -17,25 +17,32 @@ public class cadeteriaController : ControllerBase
     }
 
 
-    [HttpGet]
-    [Route("pedidos")]
-    public ActionResult<IEnumerable<List<Pedido>> getPedido()
+    [HttpGet (Name="cadeteria Nombre")]
+    // [Route("cadeteria")]
+    public ActionResult<string> getNombre()
     {
-        return Ok();
+        if (cadeteria != null && cadeteria.Nombre != null)
+        {
+            return Ok(cadeteria.Nombre);
+        }
+        else
+        {
+            return NotFound(); 
+        }
     }
 
-    [HttpGet]
-    [Route("cadetes")]
-    public List<Cadete> GetCadetes()
-    {
-        lis
-        return cadeteria.ListadoCadetes;
-    }
+    // [HttpGet]
+    // [Route("cadetes")]
+    // public List<Cadete> GetCadetes()
+    // {
+    //     lis
+    //     return cadeteria.ListadoCadetes;
+    // }
 
-    [HttpGet]
-    [Route("informe")]
-    public List<Pedido> GetPedidos()
-    {
-        return cadeteria.ListadoPedidos;
-    }
+    // [HttpGet]
+    // [Route("informe")]
+    // public List<Pedido> GetPedidos()
+    // {
+    //     return cadeteria.ListadoPedidos;
+    // }
 }
