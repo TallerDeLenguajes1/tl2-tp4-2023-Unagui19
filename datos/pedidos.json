@@ -1,0 +1,20 @@
+[
+  {
+    "Nro": 1,
+    "Obs": "string",
+    "Cliente": {
+      "Nombre": "string",
+      "Direccion": "string",
+      "Telefono": "string",
+      "DatosReferenciaDireccion": "string"
+    },
+    "Estado": 1,
+    "Cadete": {
+      "Id": 1,
+      "Nombre": "Martin Palermo",
+      "Direccion": "Av. Alem 200",
+      "Telefono": "381212121",
+      "CantPedidos": 1
+    }
+  }
+]

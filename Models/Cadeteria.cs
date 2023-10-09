@@ -13,6 +13,7 @@ namespace EspacioEntidades
         private List<Cadete> listadoCadetes;
         private List<Pedido> listadoPedidos;
         private int contadorPedidos;
+        AccesoADatosPedidos helperPedidos=new();
 
         // AccesoJson helper ;
         private static Cadeteria instancia;
@@ -21,9 +22,10 @@ namespace EspacioEntidades
         {
             if (instancia == null)
             {
-                AccesoJson helper = new AccesoJson();
-                instancia = helper.getCadeteria("datos/cadeteria.json");
-                instancia.listadoCadetes=helper.getCadetes("datos/Cadetes.json");
+                AccesoADatosCadeteria helperCadeteria = new AccesoADatosCadeteria();
+                AccesoADatosCadetes helperCadetes = new AccesoADatosCadetes();
+                instancia = helperCadeteria.Obtener();
+                instancia.listadoCadetes=helperCadetes.Obtener();
                 // List<Cadete> cadetes = helper.getCadetes("datos/Cadetes.json");
             }
             return instancia;
@@ -63,6 +65,7 @@ namespace EspacioEntidades
             contadorPedidos++;
             nuevoPedido.Nro=contadorPedidos;
             listadoPedidos.Add(nuevoPedido);
+            helperPedidos.guardarPedidos(listadoPedidos);
             return true;
             // return listadoPedidos.FirstOrDefault(ped => ped == nuevoPedido, null) != null;
         }
@@ -78,9 +81,7 @@ namespace EspacioEntidades
                     pedido.AsignarCadete(cadete);
                 }
             }
-            else{
-
-            }
+            helperPedidos.guardarPedidos(listadoPedidos);
         }
         
         public void ReasignarCadete(int idCadeteNuevo, int numeroPedido)
@@ -89,6 +90,7 @@ namespace EspacioEntidades
             Pedido aux = BuscarporPedidoPorNumero(numeroPedido);
             aux.DesasignarCadete();
             aux.AsignarCadete(BuscarporCadetePorId(idCadeteNuevo));
+            helperPedidos.guardarPedidos(listadoPedidos);
         }
         public void CambiarEstado(int numeroPedido, int estado)
         {
@@ -107,6 +109,7 @@ namespace EspacioEntidades
                         }
                     }
                 }
+                helperPedidos.guardarPedidos(listadoPedidos);
         }
         public Cadete BuscarporCadetePorId(int id)
         {

@@ -9,6 +9,7 @@ namespace EspacioAccesoData
     {
         public virtual List<Cadete> getCadetes(string path){return null;}
         public virtual Cadeteria getCadeteria(string path){return null;}        
+        public virtual List<Pedido> GetPedidos(){return null;}        
     }
 
 
@@ -49,13 +50,50 @@ namespace EspacioAccesoData
         }
 
     }
-        
-        // public override List<Cadete> getCadetes(string path)
-        // {
-        //      string textoJson = File.ReadAllText(path);
-        //     List<Cadete> nuevaLista = JsonSerializer.Deserialize<List<Cadete>>(textoJson);
-        //     return nuevaLista;
-        // }
+
+
+    public class AccesoADatosCadeteria:AccesoJson
+    {
+        public Cadeteria Obtener()
+        {
+            return getCadeteria("datos/cadeteria.json");
+        }
+
+    }
+
+    public class AccesoADatosCadetes:AccesoJson
+    {
+        public List<Cadete> Obtener()
+        {
+            return getCadetes("datos/Cadetes.json");
+        }
+
+    }
+
+    public class AccesoADatosPedidos:AccesoJson
+    {
+        public void guardarPedidos(List<Pedido> pedidos)
+        {    
+            var fst = new FileStream("datos/pedidos.json",FileMode.OpenOrCreate);
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string archivoJson = JsonSerializer.Serialize(pedidos,options);
+            using (var sw =new StreamWriter(fst))
+            {
+                sw.WriteLine(archivoJson);
+                sw.Close();
+            }//PARA CREAR UN JSON y guardar o solo guardar 
+            fst.Close();
+        }
+        public List<Pedido> Obtener()
+        {
+            string documento=leerArchivo("datos/pedidos.json");
+            List<Pedido> pedidos= JsonSerializer.Deserialize<List<Pedido>>(documento); 
+            // Console.WriteLine($"{cadeteria.Nombre},{cadeteria.Telefono},{cadeteria.Code}");
+            return pedidos; 
+        }
+
+    }
+
 
 
 
