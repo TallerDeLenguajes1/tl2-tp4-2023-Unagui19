@@ -12,24 +12,24 @@ namespace EspacioEntidades
     }
     public class Pedido
     {
-        public int nro;
-        public string obs;
-        public Cliente cliente;
-        public Estado estado;
-        public Cadete cadete;
-
+        private int nro;
+        private string obs;
+        private Cliente cliente;
+        private Estado estado;
+        private Cadete cadete;
 
         public int Nro { get => nro; set => nro = value; }
         public string Obs { get => obs; set => obs = value; }
-        internal Estado Estado { get => estado; set => estado = value; }
-        private Cliente Cliente { get => cliente; set => cliente = value; }
+        public Cliente Cliente { get => cliente; set => cliente = value; }
+        public Estado Estado { get => estado; set => estado = value; }
         public Cadete Cadete { get => cadete; set => cadete = value; }
+
         public Pedido(int nro, string obs, Cliente cliente)
         {
-            this.nro = nro;
-            this.obs = obs;
-            this.cliente = cliente;
-            this.estado = Estado.pendiente;
+            this.Nro = nro;
+            this.Obs = obs;
+            this.Cliente = cliente;
+            this.Estado = Estado.pendiente;
             // this.cadete = cadete;
         }
 
@@ -74,25 +74,25 @@ namespace EspacioEntidades
 
         public string verDatosCliente()
         {
-            return cliente.Nombre + "-" + cliente.Telefono
+            return Cliente.Nombre + "-" + Cliente.Telefono
              + "-" + Cliente.Direccion + "-" + Cliente.DatosReferenciaDireccion; ;
         }
 
 
         public string verDireccionCliente()
         {
-            return cliente.Direccion;
+            return Cliente.Direccion;
         }
 
         public void AceptarPedido()
         {
-            estado = Estado.aceptado;
-            cadete.CantPedidos++;
+            Estado = Estado.aceptado;
+            Cadete.CantPedidos++;
         }
         public void CancelarPedido()
         {
-            estado = Estado.cancelado;
-            cadete.CantPedidos--;
+            Estado = Estado.cancelado;
+            Cadete.CantPedidos--;
         }
 
         public void AsignarCadete(Cadete cadete)
