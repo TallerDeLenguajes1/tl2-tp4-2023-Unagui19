@@ -12,28 +12,29 @@ namespace EspacioEntidades
         private string telefono;
         private List<Cadete> listadoCadetes;
         private List<Pedido> listadoPedidos;
-        private static int contadorPedidos;
+        private int contadorPedidos;
 
         // AccesoJson helper ;
-        private static Cadeteria cadeteria;
+        private static Cadeteria instancia;
 
-        public static Cadeteria GetCadeteria()
+        public static Cadeteria GetInstancia()
         {
-            if (cadeteria == null)
+            if (instancia == null)
             {
                 AccesoJson helper = new AccesoJson();
-                cadeteria = helper.getCadeteria("datos/cadeteria.json");
-                cadeteria.listadoCadetes=helper.getCadetes("datos/Cadetes.json");
+                instancia = helper.getCadeteria("datos/cadeteria.json");
+                instancia.listadoCadetes=helper.getCadetes("datos/Cadetes.json");
                 // List<Cadete> cadetes = helper.getCadetes("datos/Cadetes.json");
             }
-            return cadeteria;
+            return instancia;
         }
         public Cadeteria(string nombre, string telefono)
         {
-            this.Nombre = nombre;
-            this.Telefono = telefono;
-            this.ListadoCadetes = new List<Cadete>();
-            this.ListadoPedidos = new List<Pedido>();
+            Nombre = nombre;
+            Telefono = telefono;
+            ListadoCadetes = new List<Cadete>();
+            ListadoPedidos = new List<Pedido>();
+            contadorPedidos=0;
         }
 
         public string Nombre { get => nombre; set => nombre = value; }
@@ -41,27 +42,29 @@ namespace EspacioEntidades
         public List<Cadete> ListadoCadetes { get => listadoCadetes; set => listadoCadetes = value; }
         public List<Pedido> ListadoPedidos { get => listadoPedidos; set => listadoPedidos = value; }
 
-        public Pedido crearPedido(string nombre, string direc, double telefono, string referencias, string obs)
+        // public Pedido crearPedido(string nombre, string direc, double telefono, string referencias, string obs)
+        // {
+        //     Pedido nuevoPedido = new Pedido(nombre, direc, telefono, referencias, obs);
+        //     contadorPedidos++;
+        //     nuevoPedido.Nro=contadorPedidos+1;
+        //     ListadoPedidos.Add(nuevoPedido);
+        //     return nuevoPedido;
+        // // }
+        // public Pedido crearPedido(Pedido pedido)
+        // {
+        //     contadorPedidos++;
+        //     pedido.Nro=contadorPedidos+1;
+        //     ListadoPedidos.Add(pedido);
+        //     return pedido;
+        // }
+        public bool AgregarPedido(Pedido nuevoPedido)
         {
-            Pedido nuevoPedido = new Pedido(nombre, direc, telefono, referencias, obs);
+            if(nuevoPedido==null) return false;
             contadorPedidos++;
-            nuevoPedido.Nro=contadorPedidos+1;
-            ListadoPedidos.Add(nuevoPedido);
-            return nuevoPedido;
-        }
-        public Pedido crearPedido()
-        {
-            Pedido nuevoPedido = new Pedido();
-            contadorPedidos++;
-            nuevoPedido.Nro=contadorPedidos+1;
-            ListadoPedidos.Add(nuevoPedido);
-            return nuevoPedido;
-        }
-        public bool AgregarPedido(Pedido pedido)
-        {
-            pedido.Nro++;
-            this.listadoPedidos.Add(pedido);
-            return listadoPedidos.FirstOrDefault(ped => ped == pedido, null) != null;
+            nuevoPedido.Nro=contadorPedidos;
+            listadoPedidos.Add(nuevoPedido);
+            return true;
+            // return listadoPedidos.FirstOrDefault(ped => ped == nuevoPedido, null) != null;
         }
 
         public void AsignarCadeteAPedido(int idCadete, int numeroPedido) //asigna un cadete a un pedido ( tp3)
@@ -95,6 +98,7 @@ namespace EspacioEntidades
                     {
                         if (estado == (int)Estado.cancelado)
                         {
+                            
                             item.AceptarPedido();
                         }
                         else
@@ -106,16 +110,16 @@ namespace EspacioEntidades
         }
         public Cadete BuscarporCadetePorId(int id)
         {
-            Cadete cadete = this.listadoCadetes.FirstOrDefault(cadete => cadete.Id == id);
+            Cadete cadete = listadoCadetes.FirstOrDefault(cadete => cadete.Id == id);
             return cadete;
         }
         public Pedido BuscarporPedidoPorNumero(int nPedido)
         {
-            Pedido pedido = this.listadoPedidos.FirstOrDefault(pedido => pedido.Nro == nPedido);
+            Pedido pedido = listadoPedidos.FirstOrDefault(pedido => pedido.Nro == nPedido);
             return pedido;
         }
 
-        public double jornalACobrar(int idCadete)
+        public double JornalACobrar(int idCadete)
         {
             // int contador = 0;
             Cadete cadete = BuscarporCadetePorId(idCadete); 
@@ -126,6 +130,35 @@ namespace EspacioEntidades
             else{
                 return -1;
             }
+        }
+
+        public string GetInforme()
+        {
+            double montoTotal = 0;
+            int totalEnvios = 0;
+            string informe = "Informe de Pedidos:\n";
+
+            foreach (Cadete cadete in listadoCadetes)
+            {
+                int enviosCadete = cadete.CantPedidos;
+                double montoCadete = JornalACobrar(cadete.Id);
+
+                informe += $"Cadete: {cadete.Nombre}\n";
+                informe += $"Cantidad de Envíos: {enviosCadete}\n";
+                informe += $"Monto Ganado: ${montoCadete}\n\n";
+
+                totalEnvios += enviosCadete;
+                montoTotal += montoCadete;
+            }
+
+            double promedioEnviosPorCadete = (double)totalEnvios / listadoCadetes.Count;
+
+            informe += "Resumen General:\n";
+            informe += $"Total de Envíos: {totalEnvios}\n";
+            informe += $"Monto Total Ganado: ${montoTotal}\n";
+            informe += $"Cantidad Promedio de Envíos por Cadete: {promedioEnviosPorCadete:F2}";
+
+            return informe;
         }
 
     }

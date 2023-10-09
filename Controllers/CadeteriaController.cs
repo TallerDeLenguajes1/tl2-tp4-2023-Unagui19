@@ -13,7 +13,7 @@ public class cadeteriaController : ControllerBase
     public cadeteriaController(ILogger<cadeteriaController> logger)
     {
         _logger = logger;
-        cadeteria = Cadeteria.GetCadeteria();
+        cadeteria = Cadeteria.GetInstancia();
     }
 
 
@@ -46,6 +46,15 @@ public class cadeteriaController : ControllerBase
         return Ok(cadeteria.ListadoPedidos);
     }
 
+    [HttpGet("GetInforme", Name = "GetInforme")]
+    public ActionResult<string> GetInforme()
+    {
+        var cadeteria = Cadeteria.GetInstancia();
+        var informe = cadeteria.GetInforme();
+        return Ok(informe);
+    }
+
+
 
     [HttpPost]//("AgregarPedido/Pedido={pedido}")]
     [Route("AddPedido")]
@@ -65,7 +74,7 @@ public class cadeteriaController : ControllerBase
     [Route("AsignarPedido")]
     public ActionResult<bool> AsignarPedido(int idPedido, int idCadete)
     {
-        Pedido pedido = new Pedido();
+        // Pedido pedido = new Pedido();
         if(idPedido!=0 && idCadete!=0){
             cadeteria.AsignarCadeteAPedido(idCadete,idPedido);
             return Ok("pedido asignado con exito");
