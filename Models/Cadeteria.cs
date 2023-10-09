@@ -12,17 +12,21 @@ namespace EspacioEntidades
         private string telefono;
         private List<Cadete> listadoCadetes;
         private List<Pedido> listadoPedidos;
-        private static Cadeteria inicializado;
+        private static int contadorPedidos;
 
-        public static Cadeteria GetCadeteriaSingleton()
+        // AccesoJson helper ;
+        private static Cadeteria cadeteria;
+
+        public static Cadeteria GetCadeteria()
         {
-            if (inicializado == null)
+            if (cadeteria == null)
             {
-                AccesoData helper = new AccesoJson();
-                Cadeteria cadeteria = helper.getCadeteria("cadeteria.json");
-                List<Cadete> cadetes = helper.getCadetes("Cadetes.json");
+                AccesoJson helper = new AccesoJson();
+                cadeteria = helper.getCadeteria("datos/cadeteria.json");
+                cadeteria.listadoCadetes=helper.getCadetes("datos/Cadetes.json");
+                // List<Cadete> cadetes = helper.getCadetes("datos/Cadetes.json");
             }
-            return inicializado;
+            return cadeteria;
         }
         public Cadeteria(string nombre, string telefono)
         {
@@ -40,16 +44,40 @@ namespace EspacioEntidades
         public Pedido crearPedido(string nombre, string direc, double telefono, string referencias, string obs)
         {
             Pedido nuevoPedido = new Pedido(nombre, direc, telefono, referencias, obs);
+            contadorPedidos++;
+            nuevoPedido.Nro=contadorPedidos+1;
             ListadoPedidos.Add(nuevoPedido);
             return nuevoPedido;
         }
+        public Pedido crearPedido()
+        {
+            Pedido nuevoPedido = new Pedido();
+            contadorPedidos++;
+            nuevoPedido.Nro=contadorPedidos+1;
+            ListadoPedidos.Add(nuevoPedido);
+            return nuevoPedido;
+        }
+        public bool AgregarPedido(Pedido pedido)
+        {
+            pedido.Nro++;
+            this.listadoPedidos.Add(pedido);
+            return listadoPedidos.FirstOrDefault(ped => ped == pedido, null) != null;
+        }
 
-        public void AsignarCadeteAPedido(int id, int numeroPedido) //asigna un cadete a un pedido ( tp3)
+        public void AsignarCadeteAPedido(int idCadete, int numeroPedido) //asigna un cadete a un pedido ( tp3)
         {
             // Cadete cadete = this.listadoCadetes.First(cadete => cadete.Id == id);
-            Cadete cadete = BuscarporCadetePorId(id);
-            Pedido pedido = BuscarporPedidoPorNumero(numeroPedido);
-            pedido.AsignarCadete(cadete);
+            Cadete cadete = BuscarporCadetePorId(idCadete);
+            if(cadete!=null){
+                Pedido pedido = BuscarporPedidoPorNumero(numeroPedido);
+                if (pedido !=null)
+                {
+                    pedido.AsignarCadete(cadete);
+                }
+            }
+            else{
+
+            }
         }
         
         public void ReasignarCadete(int idCadeteNuevo, int numeroPedido)

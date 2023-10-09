@@ -7,8 +7,8 @@ namespace EspacioAccesoData
 {
     public abstract class AccesoData
     {
-        public abstract List<Cadete> getCadetes(string path);
-        public abstract Cadeteria getCadeteria(string path);        
+        public virtual List<Cadete> getCadetes(string path){return null;}
+        public virtual Cadeteria getCadeteria(string path){return null;}        
     }
 
 
@@ -88,7 +88,7 @@ namespace EspacioAccesoData
                 string linea = sr.ReadLine();
                 string[] fields = linea.Split(',');//para leer cada uno de los elementos hasta el ,
                 // documento.Add(fields);            // string agregar = string.Join(";","cebolla");
-                cadetes.Add(new Cadete(int.Parse(fields[0]), fields[1], fields[2], double.Parse(fields[3])));
+                cadetes.Add(new Cadete(int.Parse(fields[0]), fields[1], fields[2], fields[3]));
             }
             csv.Close();
             return cadetes;

@@ -7,18 +7,18 @@ namespace EspacioEntidades
         private int id;
         private string? nombre;
         private string direccion;
-        private double telefono;
+        private string telefono;
         private int cantPedidos;
 
         public int Id { get => id; set => id = value; }
         public string? Nombre { get => nombre; set => nombre = value; }
         public string Direccion { get => direccion; set => direccion = value; }
-        public double Telefono { get => telefono; set => telefono = value; }
+        public string Telefono { get => telefono; set => telefono = value; }
         public int CantPedidos { get => cantPedidos; set => cantPedidos = value; }
 
         // public List<Pedido> ListadoPedidos { get => listadoPedidos; set => listadoPedidos = value; }
 
-        public Cadete(int id, string? nombre, string direccion, double telefono)
+        public Cadete(int id, string? nombre, string direccion, string telefono)
         {
             this.id = id;
             this.nombre = nombre;
@@ -28,6 +28,7 @@ namespace EspacioEntidades
             // this.listadoPedidos = new List<Pedido>();
         }
 
+        public Cadete(){}
 
     }
 

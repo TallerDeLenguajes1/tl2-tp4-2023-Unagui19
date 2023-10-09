@@ -12,7 +12,7 @@ namespace EspacioEntidades
 {
     public class Pedido
     {
-        private static int nro;
+        private int nro;
         private Cliente cliente;
         private string obs;
         private Estado estado;
@@ -25,15 +25,26 @@ namespace EspacioEntidades
         internal Estado Estado { get => estado; set => estado = value; }
         public Cadete Cadete { get => cadete; set => cadete = value; }
 
+
+
+
         public Pedido(string nombre, string direccion, double telefono, string datosReferenciaDireccion, string obs)
         {
-            this.Nro++;
+            this.nro=0;
             this.estado = Estado.pendiente;
             cliente = new Cliente(nombre, direccion, telefono, datosReferenciaDireccion);//esto es porque es composicion
             this.Obs = obs;
-            // cadete = new Cadete(id, nombre, direccion, telefono);
+            cadete = new Cadete();
         }
 
+        public Pedido()
+        {
+            this.nro=0;
+            // this.estado = Estado.pendiente;
+            // cliente = new Cliente();//esto es porque es composicion
+            // this.Obs = "";
+            // cadete = new Cadete();
+        }
         //metodos
 
         public string verDatosCliente()

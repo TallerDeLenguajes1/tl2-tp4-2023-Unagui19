@@ -13,15 +13,15 @@ public class cadeteriaController : ControllerBase
     public cadeteriaController(ILogger<cadeteriaController> logger)
     {
         _logger = logger;
-        cadeteria = Cadeteria.GetCadeteriaSingleton();
+        cadeteria = Cadeteria.GetCadeteria();
     }
 
 
-    [HttpGet (Name="cadeteria Nombre")]
+    [HttpGet (Name="cadeteria")]
     // [Route("cadeteria")]
     public ActionResult<string> getNombre()
     {
-        if (cadeteria != null && cadeteria.Nombre != null)
+        if (cadeteria != null)
         {
             return Ok(cadeteria.Nombre);
         }
@@ -31,18 +31,72 @@ public class cadeteriaController : ControllerBase
         }
     }
 
-    // [HttpGet]
-    // [Route("cadetes")]
-    // public List<Cadete> GetCadetes()
-    // {
-    //     lis
-    //     return cadeteria.ListadoCadetes;
-    // }
 
-    // [HttpGet]
-    // [Route("informe")]
-    // public List<Pedido> GetPedidos()
-    // {
-    //     return cadeteria.ListadoPedidos;
-    // }
+    [HttpGet]
+    [Route("cadetes")]
+    public ActionResult<IEnumerable<Cadete>> GetCadetes()
+    {
+        return Ok(cadeteria.ListadoCadetes);
+    }
+
+    [HttpGet]
+    [Route("pedidos")]
+    public ActionResult<IEnumerable<Pedido>> GetPedidos()
+    {
+        return Ok(cadeteria.ListadoPedidos);
+    }
+
+
+    [HttpPost]//("AgregarPedido/Pedido={pedido}")]
+    [Route("AddPedido")]
+    public ActionResult<string> AgregarPedido(Pedido pedido)
+    {
+        bool agregado = cadeteria.AgregarPedido(pedido);
+        if(agregado){
+            
+            return Ok("Pedido agregado con exito");
+        }else
+        {
+            return BadRequest("Error al agregar pedido");
+        }
+    }
+
+    [HttpPut]
+    [Route("AsignarPedido")]
+    public ActionResult<bool> AsignarPedido(int idPedido, int idCadete)
+    {
+        Pedido pedido = new Pedido();
+        if(idPedido!=0 && idCadete!=0){
+            cadeteria.AsignarCadeteAPedido(idCadete,idPedido);
+            return Ok("pedido asignado con exito");
+        }
+        else{
+            return NotFound("Numero de cadete o pedido incorrectos");
+        }
+    }
+
+    [HttpPut]
+    [Route("CambiarEstadoPedido")]
+    public ActionResult<bool> CambiarEstadoPedido(int idPedido,int NuevoEstado)
+    {
+        if(cadeteria.BuscarporPedidoPorNumero(idPedido)!=null){
+            cadeteria.CambiarEstado(idPedido,NuevoEstado);
+            return Ok("Pedido cambiado de estadoi con exito");
+        }
+        else{
+            return NotFound("Numero de pedido incorrecto");
+        }
+    }
+
+
+    [HttpPut]
+    [Route ("CambiarCadetePedido")] 
+    public ActionResult<Pedido>CambiarCadetePedido(int idPedido, int idNuevoCadete)
+    {
+        cadeteria.ReasignarCadete(idNuevoCadete,idPedido);
+        return Ok("Pedido reasignado con exito");
+    }
+
+// ● [Put] CambiarEstadoPedido(int idPedido,int NuevoEstado)
+// ● [Put] CambiarCadetePedido(int idPedido,int idNuevoCadete)
 }
