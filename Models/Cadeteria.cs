@@ -13,6 +13,7 @@ namespace EspacioEntidades
         private List<Cadete> listadoCadetes;
         private List<Pedido> listadoPedidos;
         private int contadorPedidos;
+        private int contadorCadetes;
         AccesoADatosPedidos helperPedidos=new();
 
         // AccesoJson helper ;
@@ -37,6 +38,7 @@ namespace EspacioEntidades
             ListadoCadetes = new List<Cadete>();
             ListadoPedidos = new List<Pedido>();
             contadorPedidos=0;
+            contadorCadetes=0;
         }
 
         public string Nombre { get => nombre; set => nombre = value; }
@@ -91,6 +93,17 @@ namespace EspacioEntidades
             aux.DesasignarCadete();
             aux.AsignarCadete(BuscarporCadetePorId(idCadeteNuevo));
             helperPedidos.guardarPedidos(listadoPedidos);
+        }
+
+        public bool AgregarCadete(string? nombre, string direccion, string telefono)
+        {
+            contadorCadetes+=listadoCadetes.Count();
+            Cadete nuevoCadete = new Cadete( contadorCadetes, nombre, direccion, telefono);
+            if(nuevoCadete==null) return false;
+            listadoCadetes.Add(nuevoCadete);
+            helperPedidos.guardarPedidos(listadoPedidos);
+            return true;
+            // return listadoPedidos.FirstOrDefault(ped => ped == nuevoPedido, null) != null;
         }
         public void CambiarEstado(int numeroPedido, int estado)
         {

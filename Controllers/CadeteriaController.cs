@@ -106,6 +106,48 @@ public class cadeteriaController : ControllerBase
         return Ok("Pedido reasignado con exito");
     }
 
+    [HttpGet (" GetCadete/{id}", Name = "GetCadete")]
+    public ActionResult<Cadete>GetCadetePorId(int id)
+    {
+        Cadete cadete=cadeteria.BuscarporCadetePorId(id);
+        if (cadete!=null)
+        {
+            return Ok(cadete);
+        }
+        else{
+            return NotFound("No existe el cadete buscado");
+        }
+    }
+
+    [HttpGet (" GetPedido/{id}", Name = "GetPedido")]
+    public ActionResult<Pedido>GetPedidoPorId(int id)
+    {
+        Pedido pedido = cadeteria.BuscarporPedidoPorNumero(id);
+        if (pedido!=null)
+        {
+            return Ok(pedido);
+        }
+        else{
+            return NotFound("No existe el pedido buscado");
+        }
+    }
+
+    [HttpPost]
+    [Route ("AddCadete")] 
+    public ActionResult<bool>AddCadete(string? nombre, string direccion, string telefono)
+    {
+        bool resultado = cadeteria.AgregarCadete(nombre, direccion, telefono);
+        if(resultado){
+            return Ok("Cadete agregado con exito");
+        }
+        else{
+            return StatusCode(500,"error al agregar cadete");
+        }
+    }
+
 // ● [Put] CambiarEstadoPedido(int idPedido,int NuevoEstado)
 // ● [Put] CambiarCadetePedido(int idPedido,int idNuevoCadete)
 }
+// ● [Get] GetPedido/{id} : devuelve un pedido especificado por el id
+// ● [Get] GetCadete/{id} : devuelve un cadete especificado por el id
+// ● [Post] AddCadete : agrega un cadete nuevo a la cadetería.
